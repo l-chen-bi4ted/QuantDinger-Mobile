@@ -1,4 +1,6 @@
-export const DEFAULT_SERVER_URL = 'https://api.dq.v5.i234.me'
+export const DEFAULT_SERVER_URL =
+  (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_BASE_URL) ||
+  'http://localhost:5001'
 
 /** 邀请注册等对外分享的 H5 根地址（勿用 capacitor localhost / file 源） */
 export const PUBLIC_WEB_BASE_URL =

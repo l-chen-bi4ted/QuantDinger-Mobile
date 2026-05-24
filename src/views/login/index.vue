@@ -16,6 +16,7 @@
           <img :src="logoUrl" alt="Logo" class="logo-image" />
         </div>
         <p class="subtitle">{{ $t('login.subtitle') }}</p>
+        <p class="disclaimer">项目仅作学习研究使用。不代表任何真实投资者的实际观点，不构成投资建议，投资有风险，决策需谨慎。</p>
       </div>
 
       <div class="tab-bar">
@@ -66,7 +67,6 @@
             <van-checkbox v-model="rememberMe" shape="square" icon-size="16">
               {{ $t('login.remember') }}
             </van-checkbox>
-            <span class="link" @click="switchMode('forgot')">{{ $t('login.forgot_password') }}</span>
           </div>
           <div class="row-agreement">
             <van-checkbox v-model="agreeTerms" shape="square" icon-size="16">
@@ -308,7 +308,7 @@
           </div>
         </div>
 
-        <div class="alt-link">
+        <div v-if="false" class="alt-link">
           <span v-if="mode === 'login'" class="link" @click="switchMode('register')">{{ $t('login.to_register') }}</span>
           <span v-else class="link" @click="switchMode('login')">{{ $t('login.to_login') }}</span>
         </div>
@@ -501,15 +501,11 @@ export default {
     },
     tabs() {
       return [
-        { value: 'login', label: this.$t('login.tab_login') },
-        { value: 'register', label: this.$t('login.tab_register') },
-        { value: 'forgot', label: this.$t('login.tab_forgot') }
+        { value: 'login', label: this.$t('login.tab_login') }
       ]
     },
     submitLabel() {
-      if (this.mode === 'login') return this.$t('login.login')
-      if (this.mode === 'register') return this.$t('login.register')
-      return this.$t('login.reset_submit')
+      return this.$t('login.login')
     },
     codeBtnText() {
       if (this.codeCountdown > 0) {
@@ -544,28 +540,10 @@ export default {
     canSubmit() {
       const turnstileReady = !this.securityConfig.turnstile_enabled || !!this.turnstileToken
       if (!turnstileReady) return false
-
-      if (this.mode === 'login') {
-        return !!(
-          this.loginForm.username.trim() &&
-          this.loginForm.password &&
-          this.agreeTerms
-        )
-      }
-      if (this.mode === 'register') {
-        return !!(
-          this.registerForm.email.trim() &&
-          this.registerForm.code.trim() &&
-          this.registerForm.username.trim() &&
-          this.registerForm.password &&
-          this.agreeTerms
-        )
-      }
       return !!(
-        this.forgotForm.email.trim() &&
-        this.forgotForm.code.trim() &&
-        this.forgotForm.newPassword &&
-        this.forgotForm.confirmPassword
+        this.loginForm.username.trim() &&
+        this.loginForm.password &&
+        this.agreeTerms
       )
     }
   },
@@ -853,9 +831,7 @@ export default {
         showToast({ message: this.$t('login.turnstile_required'), type: 'fail' })
         return
       }
-      if (this.mode === 'login') this.handleLogin()
-      else if (this.mode === 'register') this.handleRegister()
-      else this.handleReset()
+      this.handleLogin()
     },
 
     async finalizeLogin(token, userinfo) {
@@ -1050,6 +1026,14 @@ export default {
   font-size: 13px;
   line-height: 1.55;
   padding: 0 8px;
+}
+
+.disclaimer {
+  color: var(--text-3);
+  font-size: 11px;
+  line-height: 1.5;
+  padding: 6px 8px 0;
+  margin-top: -6px;
 }
 
 .tab-bar {
