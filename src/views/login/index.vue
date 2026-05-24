@@ -19,20 +19,20 @@
         <p class="disclaimer">项目仅作学习研究使用。不代表任何真实投资者的实际观点，不构成投资建议，投资有风险，决策需谨慎。</p>
       </div>
 
-      <div class="tab-bar">
-        <div
-          v-for="tab in tabs"
-          :key="tab.value"
-          :class="['tab', { active: mode === tab.value }]"
-          @click="switchMode(tab.value)"
-        >
-          {{ tab.label }}
-        </div>
-      </div>
-
       <div class="login-form">
-        <!-- Login -->
         <template v-if="mode === 'login'">
+          <div class="form-item">
+            <div class="input-wrapper">
+              <van-icon name="link-o" class="input-icon" />
+              <input
+                v-model="serverUrl"
+                type="url"
+                placeholder="服务器地址（如 http://192.168.1.100:5001）"
+                class="input"
+                @blur="saveServerUrl"
+              />
+            </div>
+          </div>
           <div class="form-item">
             <div class="input-wrapper">
               <van-icon name="user-o" class="input-icon" />
@@ -460,6 +460,7 @@ export default {
     return {
       logoUrl,
       mode: 'login',
+      serverUrl: '',
       loginForm: { username: '', password: '' },
       registerForm: { email: '', code: '', username: '', password: '', referralCode: '' },
       forgotForm: { email: '', code: '', newPassword: '', confirmPassword: '' },
@@ -568,6 +569,7 @@ export default {
   },
 
   async mounted() {
+    this.serverUrl = localStorage.getItem('serverUrl') || ''
     await this.handleOAuthCallback()
     await this.initSecurity()
   },
@@ -578,6 +580,14 @@ export default {
   },
 
   methods: {
+    saveServerUrl() {
+      if (this.serverUrl && this.serverUrl.trim()) {
+        localStorage.setItem('serverUrl', this.serverUrl.trim().replace(/\/$/, ''))
+      } else {
+        localStorage.removeItem('serverUrl')
+      }
+    },
+
     switchMode(mode) {
       if (this.mode === mode) return
       this.mode = mode
