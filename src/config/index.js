@@ -1,4 +1,4 @@
-export const DEFAULT_SERVER_URL = 'https://api.quantdinger.com'
+export const DEFAULT_SERVER_URL = 'https://api.dq.v5.i234.me'
 
 /** 邀请注册等对外分享的 H5 根地址（勿用 capacitor localhost / file 源） */
 export const PUBLIC_WEB_BASE_URL =
